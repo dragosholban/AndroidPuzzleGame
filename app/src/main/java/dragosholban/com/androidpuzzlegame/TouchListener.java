@@ -12,6 +12,11 @@ import static java.lang.StrictMath.abs;
 public class TouchListener implements View.OnTouchListener {
     private float xDelta;
     private float yDelta;
+    private PuzzleActivity activity;
+
+    public TouchListener(PuzzleActivity activity) {
+        this.activity = activity;
+    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -45,6 +50,7 @@ public class TouchListener implements View.OnTouchListener {
                     piece.setLayoutParams(lParams);
                     piece.canMove = false;
                     sendViewToBack(piece);
+                    activity.checkGameOver();
                 }
                 break;
         }

@@ -22,6 +22,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 import static java.lang.Math.abs;
 
@@ -48,10 +50,17 @@ public class PuzzleActivity extends AppCompatActivity {
                     setPicFromAsset(assetName, imageView);
                 }
                 pieces = splitImage();
-                TouchListener touchListener = new TouchListener();
+                TouchListener touchListener = new TouchListener(PuzzleActivity.this);
+                // shuffle pieces order
+                Collections.shuffle(pieces);
                 for (PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
+                    // randomize position, on the bottom of the screen
+                    RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) piece.getLayoutParams();
+                    lParams.leftMargin = new Random().nextInt(layout.getWidth() - piece.pieceWidth);
+                    lParams.topMargin = layout.getHeight() - piece.pieceHeight;
+                    piece.setLayoutParams(lParams);
                 }
             }
         });
@@ -264,5 +273,21 @@ public class PuzzleActivity extends AppCompatActivity {
         ret[1] = top;
 
         return ret;
+    }
+
+    public void checkGameOver() {
+        if (isGameOver()) {
+            finish();
+        }
+    }
+
+    private boolean isGameOver() {
+        for (PuzzlePiece piece : pieces) {
+            if (piece.canMove) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
