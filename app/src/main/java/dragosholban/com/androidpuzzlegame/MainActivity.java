@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     private static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 3;
+    static final int REQUEST_IMAGE_GALLERY = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +128,23 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, PuzzleActivity.class);
             intent.putExtra("mCurrentPhotoPath", mCurrentPhotoPath);
             startActivity(intent);
+        }
+        if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+
+            Intent intent = new Intent(this, PuzzleActivity.class);
+            intent.putExtra("mCurrentPhotoUri", uri.toString());
+            startActivity(intent);
+        }
+    }
+
+    public void onImageFromGalleryClick(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_IMAGE_GALLERY);
         }
     }
 }

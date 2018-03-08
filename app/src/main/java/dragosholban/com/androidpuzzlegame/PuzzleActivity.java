@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import static java.lang.Math.abs;
 public class PuzzleActivity extends AppCompatActivity {
     ArrayList<PuzzlePiece> pieces;
     String mCurrentPhotoPath;
+    String mCurrentPhotoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class PuzzleActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String assetName = intent.getStringExtra("assetName");
         mCurrentPhotoPath = intent.getStringExtra("mCurrentPhotoPath");
+        mCurrentPhotoUri = intent.getStringExtra("mCurrentPhotoUri");
 
         // run image related code after the view was laid out
         // to have all dimensions calculated
@@ -53,6 +56,8 @@ public class PuzzleActivity extends AppCompatActivity {
                     setPicFromAsset(assetName, imageView);
                 } else if (mCurrentPhotoPath != null) {
                     setPicFromPath(mCurrentPhotoPath, imageView);
+                } else if (mCurrentPhotoUri != null) {
+                    imageView.setImageURI(Uri.parse(mCurrentPhotoUri));
                 }
                 pieces = splitImage();
                 TouchListener touchListener = new TouchListener(PuzzleActivity.this);
