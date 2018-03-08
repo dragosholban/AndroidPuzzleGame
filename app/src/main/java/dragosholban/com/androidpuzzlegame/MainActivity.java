@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final ConstraintLayout layout = findViewById(R.id.layout);
+        final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
 
         // run image related code after the view was laid out
@@ -30,9 +31,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 pieces = splitImage();
+                TouchListener touchListener = new TouchListener();
                 for(Bitmap piece : pieces) {
                     ImageView iv = new ImageView(getApplicationContext());
                     iv.setImageBitmap(piece);
+                    iv.setOnTouchListener(touchListener);
                     layout.addView(iv);
                 }
             }
