@@ -21,7 +21,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/photo" />
+        app:srcCompat="@drawable/photo"
+        android:alpha="0.5" />
 
     <RelativeLayout
         android:id="@+id/layout"

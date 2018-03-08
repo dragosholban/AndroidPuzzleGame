@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<Bitmap> pieces;
+    ArrayList<PuzzlePiece> pieces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,23 +32,21 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 pieces = splitImage();
                 TouchListener touchListener = new TouchListener();
-                for(Bitmap piece : pieces) {
-                    ImageView iv = new ImageView(getApplicationContext());
-                    iv.setImageBitmap(piece);
-                    iv.setOnTouchListener(touchListener);
-                    layout.addView(iv);
+                for(PuzzlePiece piece : pieces) {
+                    piece.setOnTouchListener(touchListener);
+                    layout.addView(piece);
                 }
             }
         });
     }
 
-    private ArrayList<Bitmap> splitImage() {
+    private ArrayList<PuzzlePiece> splitImage() {
         int piecesNumber = 12;
         int rows = 4;
         int cols = 3;
 
         ImageView imageView = findViewById(R.id.imageView);
-        ArrayList<Bitmap> pieces = new ArrayList<>(piecesNumber);
+        ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
@@ -75,7 +73,14 @@ public class MainActivity extends AppCompatActivity {
         for (int row = 0; row < rows; row++) {
             int xCoord = 0;
             for (int col = 0; col < cols; col++) {
-                pieces.add(Bitmap.createBitmap(croppedBitmap, xCoord, yCoord, pieceWidth, pieceHeight));
+                Bitmap pieceBitmap = Bitmap.createBitmap(croppedBitmap, xCoord, yCoord, pieceWidth, pieceHeight);
+                PuzzlePiece piece = new PuzzlePiece(getApplicationContext());
+                piece.setImageBitmap(pieceBitmap);
+                piece.xCoord = xCoord + imageView.getLeft();
+                piece.yCoord = yCoord + imageView.getTop();
+                piece.pieceWidth = pieceWidth;
+                piece.pieceHeight = pieceHeight;
+                pieces.add(piece);
                 xCoord += pieceWidth;
             }
             yCoord += pieceHeight;
